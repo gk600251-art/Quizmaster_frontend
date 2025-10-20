@@ -44,8 +44,8 @@ const DropYourPdf = ({ onQuizData }) => {
         if (!file) return;
 
         setAboutToStart(true);
-        
-        const apiURL = 'http://localhost:8080/generate-quiz';
+
+        const apiURL = 'https://quizapi-backend.onrender.com/generate-quiz';
         const formData = new FormData();
 
         formData.append('file', file);
@@ -74,7 +74,7 @@ const DropYourPdf = ({ onQuizData }) => {
 
             onQuizData(data.quiz);
             setAboutToStart(false);
-        } catch(e) {
+        } catch (e) {
             setAboutToStart(false);
             console.error('Error starting quiz:', e);
 
@@ -89,51 +89,51 @@ const DropYourPdf = ({ onQuizData }) => {
 
 
     return (
-            <div className='relative rounded-lg bg-white shadow-sm p-8 border-2 border-gray-200'>
-                {/* Overlay for drag state */}
-                {isDragging && (
-                    <div className='absolute inset-0 z-10 flex items-center justify-center bg-gray-400 bg-opacity-50 pointer-events-none'>
-                        <p className='text-white text-lg'>Release to drop the file</p>
+        <div className='relative rounded-lg bg-white shadow-sm p-8 border-2 border-gray-200'>
+            {/* Overlay for drag state */}
+            {isDragging && (
+                <div className='absolute inset-0 z-10 flex items-center justify-center bg-gray-400 bg-opacity-50 pointer-events-none'>
+                    <p className='text-white text-lg'>Release to drop the file</p>
+                </div>
+            )}
+            <div
+                className={`relative border-2 border-dashed rounded-lg p-12 text-center transition-colors duration-150 ${isDragging ? "border-purple-600 bg-purple-50" : "border-gray-200"}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDragDrop}
+                style={aboutToStart ? { pointerEvents: 'none', userSelect: 'none', opacity: 0.6, filter: 'blur(1px)' } : {}}
+            >
+                {!file ? (
+                    <>
+                        <Upload className='text-purple-600 w-16 h-16 mx-auto mb-6 animate-bounce' />
+                        <h3 className='text-xl font-semibold mb-1'>Drop your PDF here</h3>
+                        <p className='mb-10 font-extralight'>or click to browse files</p>
+                        <input type='file' accept='.pdf' className='hidden' id='file-upload' onChange={handleFileUpload} />
+                        <label htmlFor='file-upload'>
+                            <span className='bg-purple-600 rounded-xl h-10 px-4 py-2 cursor-pointer hover:bg-blue-700 font-semibold text-white'>Select PDF file</span>
+                        </label>
+                    </>
+                ) : (
+                    <div className='mt-4'>
+                        <h2 className='text-2xl font-semibold mb-5'>Your Uploaded File</h2>
+                        <p><strong>File Name:</strong> {file.name}</p>
+                        <p><strong>File Size:</strong> {(file.size / 1048576).toFixed(2)} MB</p>
+                        <p><strong>File Type: </strong>{file.type}</p>
+
+                        <div className='flex gap-20 p-5 mt-10 justify-center items-center'>
+                            <label
+                                onClick={handleStartQuiz}
+                                className='bg-purple-600 rounded-xl h-10 px-4 py-2 cursor-pointer hover:bg-blue-700 font-semibold text-white'>
+                                Start Quiz
+                            </label>
+                            <label className='bg-purple-600 rounded-xl h-10 px-4 py-2 cursor-pointer hover:bg-blue-700 font-semibold text-white' onClick={handleNewFile}>
+                                New File
+                            </label>
+                        </div>
                     </div>
                 )}
-                <div
-                    className={`relative border-2 border-dashed rounded-lg p-12 text-center transition-colors duration-150 ${isDragging ? "border-purple-600 bg-purple-50" : "border-gray-200"}`}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDragDrop}
-                    style={aboutToStart ? { pointerEvents: 'none', userSelect: 'none', opacity: 0.6, filter: 'blur(1px)' } : {}}
-                >
-                    {!file ? (
-                        <>
-                            <Upload className='text-purple-600 w-16 h-16 mx-auto mb-6 animate-bounce' />
-                            <h3 className='text-xl font-semibold mb-1'>Drop your PDF here</h3>
-                            <p className='mb-10 font-extralight'>or click to browse files</p>
-                            <input type='file' accept='.pdf' className='hidden' id='file-upload' onChange={handleFileUpload} />
-                            <label htmlFor='file-upload'>
-                                <span className='bg-purple-600 rounded-xl h-10 px-4 py-2 cursor-pointer hover:bg-blue-700 font-semibold text-white'>Select PDF file</span>
-                            </label>
-                        </>
-                    ) : (
-                        <div className='mt-4'>
-                            <h2 className='text-2xl font-semibold mb-5'>Your Uploaded File</h2>
-                            <p><strong>File Name:</strong> {file.name}</p>
-                            <p><strong>File Size:</strong> {(file.size / 1048576).toFixed(2)} MB</p>
-                            <p><strong>File Type: </strong>{file.type}</p>
-
-                            <div className='flex gap-20 p-5 mt-10 justify-center items-center'>
-                                <label 
-                                    onClick={handleStartQuiz}
-                                    className='bg-purple-600 rounded-xl h-10 px-4 py-2 cursor-pointer hover:bg-blue-700 font-semibold text-white'>
-                                    Start Quiz
-                                </label>
-                                <label className='bg-purple-600 rounded-xl h-10 px-4 py-2 cursor-pointer hover:bg-blue-700 font-semibold text-white' onClick={handleNewFile}>
-                                    New File
-                                </label>
-                            </div>
-                        </div>
-                    )}
-                </div>
             </div>
+        </div>
     )
 }
 
